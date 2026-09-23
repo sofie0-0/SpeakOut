@@ -1,0 +1,241 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+main {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 var(--space-6) var(--space-6);
+}
+
+/* 컨트롤 --------------------------------------------------- */
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button,
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: var(--control-h);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-control);
+  background: var(--card);
+  color: var(--ink);
+  font-size: var(--text-label);
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+button:hover:not(:disabled),
+.button:hover {
+  background: var(--navy-wash);
+  border-color: var(--navy);
+}
+button:active:not(:disabled),
+.button:active {
+  transform: scale(0.97);
+}
+button:disabled {
+  color: var(--ink-faint);
+  border-color: var(--rule);
+  background: transparent;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+button.primary {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+}
+button.primary:hover:not(:disabled) {
+  background: var(--navy-deep);
+  border-color: var(--navy-deep);
+}
+
+/* 아이콘 전용·보조 버튼: 테두리 없이 조용하게 */
+button.ghost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--ink-soft);
+}
+button.ghost:hover:not(:disabled) {
+  background: var(--navy-wash);
+  border-color: transparent;
+  color: var(--navy);
+}
+button.ghost.danger:hover:not(:disabled) {
+  background: var(--rec-wash);
+  color: var(--rec);
+}
+button.icon {
+  width: var(--control-h);
+  padding: 0;
+}
+
+input[type='text'],
+input:not([type]),
+select,
+textarea {
+  min-height: var(--control-h);
+  padding: 6px var(--space-3);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-control);
+  background: var(--card);
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+textarea {
+  line-height: 1.5;
+  resize: vertical;
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--ink-faint);
+}
+input:hover:not(:disabled),
+select:hover,
+textarea:hover {
+  border-color: var(--ink-faint);
+}
+
+:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+input[type='text']:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline-offset: 0;
+  border-color: var(--navy);
+}
+
+/* 안내 문구 ------------------------------------------------- */
+.muted {
+  color: var(--ink-faint);
+}
+.error {
+  color: var(--rec);
+  font-weight: 600;
+}
+.success {
+  color: var(--navy);
+  font-weight: 600;
+}
+.notice {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-control);
+  background: var(--card);
+  color: var(--ink-soft);
+}
+
+.notice.error {
+  border-color: var(--rec);
+  background: var(--rec-wash);
+}
+
+/* 빈 상태 */
+.state-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-8) auto;
+  padding: var(--space-8) var(--space-6);
+  max-width: 420px;
+  border: 1px dashed var(--rule-strong);
+  border-radius: var(--radius-card);
+  text-align: center;
+  color: var(--ink-soft);
+}
+.state-card svg {
+  color: var(--ink-faint);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.row {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  margin-bottom: var(--space-3);
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-3);
+}
+.field > span,
+.field > label {
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 좁은 화면(폰 세로) ---------------------------------------- */
+@media (max-width: 600px) {
+  :root {
+    /* 손가락으로 누르는 화면이므로 컨트롤을 권장 터치 타깃까지 키운다.
+       토큰 하나로 버튼·input·select·textarea·button.icon이 함께 따라온다. */
+    --control-h: 44px;
+  }
+  main {
+    /* 좌우 24px은 360px 화면에서 너무 아깝다. 아래는 홈 인디케이터를 피한다. */
+    padding: 0 var(--space-3) calc(var(--space-4) + env(safe-area-inset-bottom));
+  }
+}

@@ -1,0 +1,405 @@
+/* Practice 화면 — 카드 캐러셀. 종이·잉크·녹음 램프 팔레트(문장 표 화면과 동일한 토큰)를 그대로 쓴다. */
+
+.practice-shell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 430px;
+  margin: 0 auto;
+}
+.carousel-notices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.carousel-filter-row {
+  padding: var(--space-2) var(--space-3);
+}
+
+/* 카드 캐러셀 뷰포트: 활성 카드 + 좌우로 살짝 보이는 카드 */
+.carousel-viewport {
+  position: relative;
+  height: clamp(440px, 64vh, 660px);
+  touch-action: pan-y; /* 세로 스크롤은 브라우저가 그대로 처리, 가로 이동은 JS가 판정 */
+}
+.carousel-slot {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition:
+    transform var(--dur-carousel) var(--ease-carousel),
+    opacity var(--dur-carousel) var(--ease-carousel);
+}
+.carousel-slot--peek {
+  cursor: pointer;
+}
+
+/* 큐카드: 문장 표 화면의 중앙 행과 같은 종이 카드 + 잉크 테두리 */
+.carousel-card {
+  position: relative;
+  width: 85%;
+  height: 88%;
+  max-height: 720px;
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-carousel-card);
+  box-shadow: var(--shadow-float);
+  padding: 20px;
+  overflow: hidden;
+}
+/* 큐카드 탭: 옛 다이얼 중앙 행과 같은 표식을 활성 카드 왼쪽 가장자리에 남긴다 */
+.carousel-slot--active .carousel-card::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  width: 6px;
+  height: 32px;
+  margin-top: -16px;
+  border-radius: 0 3px 3px 0;
+  background: var(--navy);
+}
+/* 양옆으로 살짝 보이는 카드는 옅게, 잉크 테두리 없이 조용히 */
+.carousel-slot--peek .carousel-card {
+  border-color: var(--rule-strong);
+  box-shadow: none;
+  pointer-events: none; /* 개별 컨트롤이 아니라 슬롯 클릭으로만 이동한다 */
+}
+
+.carousel-card-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+.card-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+.card-index-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+
+.card-scroll-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-right: 2px;
+  scroll-behavior: smooth;
+}
+
+.content-section {
+  position: relative;
+  border-radius: var(--radius-section);
+  padding: var(--space-4);
+  border: 1px solid var(--rule);
+  background: var(--paper);
+}
+.content-section--myspeech {
+  background: var(--navy-wash);
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.section-label {
+  flex: 1;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+}
+.accent-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: none;
+}
+/* 영어 = 주 강조(navy), 한국어 = 차분한 보조(ink-faint), 발화 = 녹음 램프(rec) */
+.accent-dot--primary {
+  background: var(--navy);
+}
+.accent-dot--secondary {
+  background: var(--ink-faint);
+}
+.accent-dot--rec {
+  background: var(--rec);
+}
+
+.section-text {
+  font-size: var(--text-sentence-center);
+  line-height: 1.6;
+  color: var(--ink);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  transition:
+    filter var(--dur-base) var(--ease-out),
+    opacity var(--dur-base) var(--ease-out);
+}
+.section-text--muted {
+  font-size: var(--text-sentence-near);
+  color: var(--ink-soft);
+}
+.section-text--hidden {
+  filter: blur(5px);
+  opacity: 0.4;
+  user-select: none;
+}
+.peek-overlay-btn {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-size: var(--text-meta);
+  font-weight: 700;
+}
+
+/* 보이기/가리기 토글: 알약 트랙 + 슬라이딩 손잡이. 켜짐(보임)일 때 손잡이가 오른쪽으로 가며 파랗게 빛난다 */
+.visibility-toggle {
+  position: relative;
+  width: 52px;
+  height: 28px;
+  min-height: 0;
+  flex: none;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--rule-strong);
+  background: var(--paper);
+  transition:
+    border-color var(--dur-base) var(--ease-out),
+    background-color var(--dur-base) var(--ease-out);
+}
+.visibility-toggle-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-faint);
+  opacity: 0.55;
+  pointer-events: none;
+}
+.visibility-toggle-icon--left {
+  left: 7px;
+}
+.visibility-toggle-icon--right {
+  right: 7px;
+}
+.visibility-toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card);
+  color: var(--ink-soft);
+  border: 1px solid var(--rule-strong);
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    background-color var(--dur-base) var(--ease-out),
+    color var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+.visibility-toggle[aria-pressed='true'] .visibility-toggle-knob {
+  transform: translateX(24px);
+  background: radial-gradient(circle at 35% 30%, #6f9bff, var(--navy) 70%);
+  color: #fff;
+  border-color: var(--navy-deep);
+  box-shadow:
+    0 0 0 5px var(--navy-wash),
+    0 2px 10px rgba(36, 64, 142, 0.5);
+}
+.section-header .listen {
+  min-height: 26px;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 11px;
+}
+
+/* 숙련도 알약 배지(카드 헤더) — 문장 표 화면과 같은 신호등 색 */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 var(--space-3);
+  border: none;
+  border-radius: 999px;
+  font-size: var(--text-meta);
+  font-weight: 700;
+}
+.badge-pill.p0 {
+  background: var(--p0-wash);
+  color: var(--p0-text);
+}
+.badge-pill.p1 {
+  background: var(--p1-wash);
+  color: var(--p1-text);
+}
+.badge-pill.p2 {
+  background: var(--p2-wash);
+  color: var(--p2-text);
+}
+
+/* 내가 말한 내용: textarea 아래 전폭 마이크 알약 버튼 */
+.content-section--myspeech .transcript-cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.content-section--myspeech textarea {
+  order: 1;
+  min-height: 64px;
+  background: var(--card);
+  overflow: hidden;
+  resize: none;
+}
+.mic-pill {
+  order: 2;
+  width: 100%;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  border: none;
+  border-radius: 999px;
+  background: var(--navy);
+  color: #fff;
+  font-weight: 700;
+}
+.mic-pill:hover:not(:disabled) {
+  background: var(--navy-deep);
+}
+.mic-pill.recording {
+  background: var(--rec);
+  animation: mic-pill-pulse 1.4s ease-in-out infinite;
+}
+.mic-pill-icon.bouncing {
+  animation: mic-pill-bounce 0.8s ease-in-out infinite;
+}
+@keyframes mic-pill-pulse {
+  50% {
+    opacity: 0.78;
+  }
+}
+@keyframes mic-pill-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+/* 하단 컨트롤: 좌우 버튼 + 점(또는 N/M) — 기존 다이얼 컨트롤과 같은 잉크 아이콘 버튼 */
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 0 var(--space-2);
+}
+.carousel-nav-btn {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+}
+.carousel-dots {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: var(--rule-strong);
+  transition:
+    width var(--dur-base) var(--ease-out),
+    background-color var(--dur-base) var(--ease-out);
+}
+.carousel-dot--active {
+  width: 28px;
+  background: var(--navy);
+}
+.carousel-count {
+  flex: 1;
+  text-align: center;
+  color: var(--ink-faint);
+  font-weight: 600;
+  font-size: var(--text-meta);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 좁은 화면 ------------------------------------------------- */
+@media (max-width: 600px) {
+  /* vh는 주소창이 접힐 때의 높이라 하단 컨트롤이 잘린다 → dvh.
+     최소값 440px도 세로 667px 폰에서는 상단바·필터·컨트롤과 합쳐 넘친다. */
+  .carousel-viewport {
+    height: clamp(340px, 60dvh, 660px);
+  }
+  .carousel-card {
+    padding: var(--space-4);
+  }
+  .carousel-nav-btn {
+    width: 44px;
+    height: 44px;
+  }
+  .visibility-toggle {
+    width: 58px;
+    height: 32px;
+  }
+  .visibility-toggle .visibility-toggle-knob {
+    width: 26px;
+    height: 26px;
+  }
+  .visibility-toggle[aria-pressed='true'] .visibility-toggle-knob {
+    transform: translateX(26px);
+  }
+  /* 8px 점은 손가락으로 못 누른다. 보이는 크기는 두고 탭 영역만 넓힌다. */
+  .carousel-dots {
+    gap: var(--space-1);
+  }
+  .carousel-dot {
+    position: relative;
+  }
+  .carousel-dot::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+  }
+}

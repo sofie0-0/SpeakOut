@@ -1,0 +1,67 @@
+/* 디자인 토큰 — 대본 종이와 잉크, 녹음 램프 */
+:root {
+  /* 종이·잉크 */
+  --paper: #f6f3ec;
+  --card: #fffdf9;
+  --ink: #1c2333;
+  --ink-soft: #4a5268;
+  --ink-faint: #5f6679;
+  --navy: #24408e;
+  --navy-deep: #1a3072;
+  --navy-wash: #e8ecf6;
+  --rec: #c23a28;
+  --rec-wash: #fbe9e6;
+  /* 숙련도 신호등: 0 빨강 / 1 노랑 / 2 초록 (fill=게이지·테두리, text=글자) */
+  --p0-fill: #d4432f;
+  --p0-text: #b02f1e;
+  --p0-wash: #fbe9e6;
+  --p1-fill: #e8a800;
+  --p1-text: #855a00;
+  --p1-wash: #fdf3d3;
+  --p2-fill: #2f9a55;
+  --p2-text: #1d6b3a;
+  --p2-wash: #e2f4e8;
+  --rule: rgba(28, 35, 51, 0.12);
+  --rule-strong: rgba(28, 35, 51, 0.24);
+
+  /* 글자 */
+  --font-sans: 'Plus Jakarta Sans Variable', 'Noto Sans KR Variable', system-ui, sans-serif;
+  --text-meta: 12px;
+  --text-body: 14px;
+  --text-label: 13px;
+  --text-near: 16px;
+  --text-center: 23px;
+  /* 다이얼 문장: 영어·한국어·발화는 같은 크기 */
+  --text-sentence-near: 15px;
+  --text-sentence-center: 18px;
+  --text-title: 20px;
+
+  /* 간격(4px 기준) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* 반경 */
+  --radius-control: 8px;
+  --radius-card: 14px;
+  --radius-panel: 16px;
+  --radius-carousel-card: 2.5rem;
+  --radius-section: 1.5rem;
+
+  /* 깊이: 테두리 위주. 그림자는 떠 있는 층에만. */
+  --shadow-float: 0 12px 40px rgba(28, 35, 51, 0.18), 0 0 0 1px var(--rule);
+
+  /* 모션 */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --dur-fast: 120ms;
+  --dur-base: 220ms;
+  /* 캐러셀 카드 슬라이드 전환 */
+  --ease-carousel: cubic-bezier(0.45, 0, 0.15, 1);
+  --dur-carousel: 320ms;
+
+  /* 컨트롤 */
+  --control-h: 36px;
+}

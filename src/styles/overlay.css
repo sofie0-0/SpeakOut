@@ -1,0 +1,228 @@
+/* 오버레이: 가운데 패널과 오른쪽 드로어 */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: rgba(28, 35, 51, 0.36);
+  animation: fade-in var(--dur-base) var(--ease-out);
+}
+.overlay.drawer {
+  align-items: stretch;
+  justify-content: flex-end;
+  padding: 0;
+}
+.panel {
+  width: min(480px, 100%);
+  max-height: 86vh;
+  overflow: auto;
+  padding: var(--space-6);
+  border-radius: var(--radius-panel);
+  background: var(--card);
+  box-shadow: var(--shadow-float);
+  animation: panel-in var(--dur-base) var(--ease-out);
+}
+.drawer .panel {
+  width: min(420px, 100%);
+  max-height: none;
+  border-radius: var(--radius-panel) 0 0 var(--radius-panel);
+  animation-name: drawer-in;
+}
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--rule);
+}
+.panel-header h2 {
+  font-size: var(--text-title);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+@keyframes drawer-in {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+/* 좁은 화면: 가운데 모달도 오른쪽 드로어도 아래에서 올라오는 시트가 된다.
+   한 손으로 잡았을 때 엄지가 닿는 자리다. */
+@media (max-width: 600px) {
+  .overlay,
+  .overlay.drawer {
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0;
+  }
+  .panel,
+  .drawer .panel {
+    width: 100%;
+    max-height: 86dvh;
+    overflow: auto;
+    border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+    padding: var(--space-4) var(--space-4) calc(var(--space-6) + env(safe-area-inset-bottom));
+    animation-name: sheet-in;
+  }
+}
+
+/* 폴더 목록 */
+.folder-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.folder-list li {
+  display: flex;
+  gap: var(--space-2);
+}
+.folder-select {
+  flex: 1;
+  min-width: 0;
+  justify-content: flex-start;
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  font-size: var(--text-body);
+  text-align: left;
+}
+.folder-select > span:first-of-type {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+}
+.folder-select svg {
+  flex: none;
+  color: var(--ink-faint);
+}
+.folder-list li.current .folder-select {
+  border-color: var(--navy);
+  background: var(--navy-wash);
+  color: var(--navy);
+}
+.folder-list li.current .folder-select svg {
+  color: var(--navy);
+}
+.folder-list li > button.icon {
+  height: 44px;
+}
+.folder-count {
+  flex: none;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink-faint);
+  font-size: var(--text-meta);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.folder-list li.current .folder-count {
+  background: var(--card);
+  color: var(--navy);
+}
+.panel-section-title {
+  margin: var(--space-6) 0 var(--space-2);
+  font-size: var(--text-meta);
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+.panel .row input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 추가 방식 선택(세그먼트) */
+.segmented {
+  display: flex;
+  gap: 2px;
+  margin-bottom: var(--space-4);
+  padding: 3px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-control);
+  background: var(--paper);
+}
+.segment {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  border-radius: 6px;
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+.segment input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+.segment:has(input:checked) {
+  background: var(--navy);
+  color: #fff;
+}
+.segment:has(input:focus-visible) {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
+/* CSV 파일 선택 */
+.dropzone {
+  position: relative;
+  align-self: flex-start;
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border-style: dashed;
+}
+.dropzone input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.dropzone:has(input:focus-visible) {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+.dropzone:has(input:disabled) {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.panel .field p.muted {
+  font-size: var(--text-label);
+  line-height: 1.6;
+}

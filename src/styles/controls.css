@@ -1,0 +1,220 @@
+/* 공용 부품: 숙련도 게이지, 필터 칩, 토글, 듣기·마이크 */
+
+/* 숙련도 배지 — 눈금 3칸 게이지. 채운 칸 수 = 숙련도 + 1 */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: var(--text-meta);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.badge.p0 {
+  color: var(--p0-text);
+}
+.badge.p1 {
+  color: var(--p1-text);
+}
+.badge.p2 {
+  color: var(--p2-text);
+}
+.gauge {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 3px;
+}
+.gauge i {
+  box-sizing: border-box;
+  width: 8px; /* 테두리가 보이도록 5px에서 넓혔다 */
+  height: 14px;
+  border: 1.5px solid transparent;
+  border-radius: 2.5px;
+  background: var(--rule-strong);
+}
+/* 칸마다 고정된 신호등 색: 1칸 빨강, 2칸 노랑, 3칸 초록. 채워진 칸만 색이 난다. */
+/* 채워진 칸은 필터 칩처럼 진한 테두리 + 연한 배경 */
+.gauge i.on:nth-child(1) {
+  border-color: var(--p0-fill);
+  background: var(--p0-wash);
+}
+.gauge i.on:nth-child(2) {
+  border-color: var(--p1-fill);
+  background: var(--p1-wash);
+}
+.gauge i.on:nth-child(3) {
+  border-color: var(--p2-fill);
+  background: var(--p2-wash);
+}
+/* 눌러서 바꾸는 배지(메인 중앙 행)만 버튼처럼 보인다 */
+button.badge {
+  min-height: var(--control-h);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: var(--card);
+  font-size: var(--text-label);
+}
+
+/* 필터 칩 */
+.filter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.filter legend {
+  float: left;
+  padding: 0;
+  margin-right: var(--space-1);
+  font-size: var(--text-meta);
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+.filter-count {
+  margin-left: var(--space-1);
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--navy);
+  color: #fff;
+  font-size: 11px;
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+}
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--ink-faint);
+  font-size: var(--text-meta);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+.chip input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+.chip:hover {
+  border-color: var(--navy);
+}
+.chip:has(input:checked) {
+  background: var(--navy-wash);
+  border-color: var(--navy);
+  color: var(--navy);
+}
+/* 필터 칩도 숙련도 색을 따른다 */
+.chip.p0:hover,
+.chip.p0:has(input:checked) {
+  border-color: var(--p0-fill);
+}
+.chip.p1:hover,
+.chip.p1:has(input:checked) {
+  border-color: var(--p1-fill);
+}
+.chip.p2:hover,
+.chip.p2:has(input:checked) {
+  border-color: var(--p2-fill);
+}
+.chip.p0:has(input:checked) {
+  background: var(--p0-wash);
+  color: var(--p0-text);
+}
+.chip.p1:has(input:checked) {
+  background: var(--p1-wash);
+  color: var(--p1-text);
+}
+.chip.p2:has(input:checked) {
+  background: var(--p2-wash);
+  color: var(--p2-text);
+}
+.chip:has(input:focus-visible) {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
+/* 가리기 토글(눌린 상태 = 가리는 중) */
+button.toggle {
+  min-height: 28px;
+  padding: 0 var(--space-2);
+  border-color: var(--rule-strong);
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: var(--text-meta);
+}
+button.toggle[aria-pressed='true'] {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+}
+button.toggle[aria-pressed='true']:hover:not(:disabled) {
+  background: var(--navy-deep);
+}
+
+/* 듣기 */
+button.listen {
+  min-height: 30px;
+  padding: 0 10px;
+  color: var(--navy);
+  border-color: var(--rule-strong);
+  font-size: var(--text-meta);
+}
+button.listen.playing {
+  background: var(--navy-wash);
+  border-color: var(--navy);
+}
+
+/* 마이크 + REC 램프 */
+button.mic {
+  position: relative;
+  flex: none;
+}
+button.mic.recording {
+  background: var(--rec-wash);
+  border-color: var(--rec);
+  color: var(--rec);
+}
+button.mic.recording::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--rec);
+  animation: rec-lamp 1.1s ease-in-out infinite;
+}
+@keyframes rec-lamp {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+/* 좁은 화면: 필터 칩도 손가락으로 누른다(.filter는 이미 wrap이라 알아서 접힌다) */
+@media (max-width: 600px) {
+  .chip {
+    min-height: 36px;
+    padding: 0 var(--space-3);
+  }
+}
