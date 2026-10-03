@@ -1,4 +1,4 @@
-# SpeakOut (English Learning Tool)
+# SpeakOut
 
 > Practice turning what you *want to say* into spoken English: listen, hide, speak, and track your mastery sentence by sentence.
 
