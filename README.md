@@ -1,9 +1,8 @@
 # SpeakOut
 
 > Practice turning what you *want to say* into spoken English: listen, hide, speak, and track your mastery sentence by sentence.
-
-<!-- TODO: replace with a short GIF of the core flow (listen → hide → speak → set proficiency) -->
-![Core flow demo](docs/demo.gif)
+> 
+![English Study App main screen](docs/README_image.png)
 
 ## 1. About the Project
 
